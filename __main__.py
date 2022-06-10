@@ -17,8 +17,8 @@ from game.shared.point import Point
 FRAME_RATE = 12
 MAX_X = 900
 MAX_Y = 600
-CELL_SIZE = 15
-FONT_SIZE = 15
+CELL_SIZE = 20
+FONT_SIZE = 20
 COLS = 60
 ROWS = 40
 CAPTION = "Greed"
@@ -33,15 +33,15 @@ def main():
     
     # create the banner
     banner = Actor()
-    banner.set_text("Score")
+    banner.set_text("")
     banner.set_position(Point(CELL_SIZE, 0))
     cast.add_actor("banners", banner)
     
     # create the robot
     '''x = int(MAX_X / 2)
     y = int(MAX_Y / 2)'''
-    x = int(450)
-    y = int(585)
+    x = int(460)
+    y = int(580)
     position = Point(x, y)
 
     robot = Actor()
@@ -70,6 +70,7 @@ def main():
         artifact.set_font_size(FONT_SIZE)
         artifact.set_color(color)
         artifact.set_position(position)
+        artifact.set_velocity(Point(0, 5))
         cast.add_actor("artifacts", artifact)
     
     # start the game
