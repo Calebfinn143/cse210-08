@@ -50,19 +50,22 @@ class Director:
         """
         banner = cast.get_first_actor("banners")
         robot = cast.get_first_actor("robots")
-        artifacts = cast.get_actors("artifacts")
+        gems = cast.get_actors("gems")
+        rocks = cast.get_actors("rocks")
 
         banner.set_text("Score: " + str(self.score))
         max_x = self._video_service.get_width()
         max_y = self._video_service.get_height()
         robot.move_next(max_x, max_y)
 
-        for artifact in artifacts:
-            artifact.move_next(max_x, max_y)
-            if robot.get_position().equals(artifact.get_position()):
-                if artifact == "*":
-                    self.score += 1
-                else:
+        for gem in gems:
+            gem.move_next(max_x, max_y)
+            if robot.get_position().equals(gem.get_position()):
+                self.score += 1
+
+        for rock in rocks:
+            rock.move_next(max_x, max_y)
+            if robot.get_position().equals(rock.get_position()):
                     self.score -= 1
         
     def _do_outputs(self, cast):

@@ -2,8 +2,9 @@ import os
 import random
 
 from game.casting.actor import Actor
-from game.casting.artifact import Artifact
 from game.casting.cast import Cast
+from game.casting.rocks import Rocks
+from game.casting.gems import Gems
 
 from game.directing.director import Director
 
@@ -23,7 +24,7 @@ COLS = 60
 ROWS = 40
 CAPTION = "Greed"
 WHITE = Color(255, 255, 255)
-DEFAULT_ARTIFACTS = 50
+DEFAULT_ARTIFACTS = random.randint(1, 6)
 
 
 def main():
@@ -38,8 +39,6 @@ def main():
     cast.add_actor("banners", banner)
     
     # create the robot
-    '''x = int(MAX_X / 2)
-    y = int(MAX_Y / 2)'''
     x = int(460)
     y = int(580)
     position = Point(x, y)
@@ -56,7 +55,7 @@ def main():
         text = random.choice(gems_and_rocks)
 
         x = random.randint(1, COLS - 1)
-        y = random.randint(1, ROWS - 1)
+        y = 600
         position = Point(x, y)
         position = position.scale(CELL_SIZE)
 
@@ -64,21 +63,29 @@ def main():
         g = random.randint(0, 255)
         b = random.randint(0, 255)
         color = Color(r, g, b)
-        
-        artifact = Artifact()
-        artifact.set_text(text)
-        artifact.set_font_size(FONT_SIZE)
-        artifact.set_color(color)
-        artifact.set_position(position)
-        artifact.set_velocity(Point(0, 5))
-        cast.add_actor("artifacts", artifact)
+
+        if text == "O":
+            rocks = Rocks()
+            rocks.set_text(text)
+            rocks.set_font_size(FONT_SIZE)
+            rocks.set_color(color)
+            rocks.set_position(position)
+            rocks.set_velocity(Point(0, 5))
+            cast.add_actor("rocks", rocks)
+        else:
+            gems = Gems()
+            gems.set_text(text)
+            gems.set_font_size(FONT_SIZE)
+            gems.set_color(color)
+            gems.set_position(position)
+            gems.set_velocity(Point(0, 5))
+            cast.add_actor("gems", gems)
     
     # start the game
     keyboard_service = KeyboardService(CELL_SIZE)
     video_service = VideoService(CAPTION, MAX_X, MAX_Y, CELL_SIZE, FRAME_RATE)
     director = Director(keyboard_service, video_service)
     director.start_game(cast)
-
 
 if __name__ == "__main__":
     main()
