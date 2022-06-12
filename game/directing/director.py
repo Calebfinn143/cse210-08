@@ -61,11 +61,13 @@ class Director:
         for gem in gems:
             gem.move_next(max_x, max_y)
             if robot.get_position().equals(gem.get_position()):
+                cast.remove_actor("gems", gem)
                 self.score += 1
 
         for rock in rocks:
             rock.move_next(max_x, max_y)
             if robot.get_position().equals(rock.get_position()):
+                    cast.remove_actor("rocks", rock)
                     self.score -= 1
         
     def _do_outputs(self, cast):

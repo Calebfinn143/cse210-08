@@ -24,7 +24,7 @@ COLS = 60
 ROWS = 40
 CAPTION = "Greed"
 WHITE = Color(255, 255, 255)
-DEFAULT_ARTIFACTS = random.randint(1, 6)
+DEFAULT_ARTIFACTS = random.randint(0, 6)
 
 
 def main():
