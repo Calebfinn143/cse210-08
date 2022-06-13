@@ -30,6 +30,7 @@ class Director:
         self.FONT_SIZE = 20
         self.CELL_SIZE = 20
         self.COLS = 60
+        self.alternate = 1
         
     def start_game(self, cast):
         """Starts the game using the given cast. Runs the main game loop.
@@ -99,33 +100,37 @@ class Director:
         self._video_service.flush_buffer()
 
     def _create_artifacts(self, cast):
-        for n in range(self.DEFAULT_ARTIFACTS):
-            self.gems_and_rocks = ("*", "O")
-            text = random.choice(self.gems_and_rocks)
+        if self.alternate == 2:
+            for n in range(self.DEFAULT_ARTIFACTS):
+                self.gems_and_rocks = ("*", "O")
+                text = random.choice(self.gems_and_rocks)
 
-            x = random.randint(1, self.COLS - 1)
-            y = 600
-            position = Point(x, y)
-            position = position.scale(self.CELL_SIZE)
+                x = random.randint(1, self.COLS - 1)
+                y = 600
+                position = Point(x, y)
+                position = position.scale(self.CELL_SIZE)
 
-            r = random.randint(0, 255)
-            g = random.randint(0, 255)
-            b = random.randint(0, 255)
-            color = Color(r, g, b)
+                r = random.randint(0, 255)
+                g = random.randint(0, 255)
+                b = random.randint(0, 255)
+                color = Color(r, g, b)
 
-            if text == "O":
-                rocks = Rocks()
-                rocks.set_text(text)
-                rocks.set_font_size(self.FONT_SIZE)
-                rocks.set_color(color)
-                rocks.set_position(position)
-                rocks.set_velocity(Point(0, 5))
-                cast.add_actor("rocks", rocks)
-            else:
-                gems = Gems()
-                gems.set_text(text)
-                gems.set_font_size(self.FONT_SIZE)
-                gems.set_color(color)
-                gems.set_position(position)
-                gems.set_velocity(Point(0, 5))
-                cast.add_actor("gems", gems)
+                if text == "O":
+                    rocks = Rocks()
+                    rocks.set_text(text)
+                    rocks.set_font_size(self.FONT_SIZE)
+                    rocks.set_color(color)
+                    rocks.set_position(position)
+                    rocks.set_velocity(Point(0, 5))
+                    cast.add_actor("rocks", rocks)
+                else:
+                    gems = Gems()
+                    gems.set_text(text)
+                    gems.set_font_size(self.FONT_SIZE)
+                    gems.set_color(color)
+                    gems.set_position(position)
+                    gems.set_velocity(Point(0, 5))
+                    cast.add_actor("gems", gems)
+                self.alternate -= 1
+        else:
+            self.alternate += 1
