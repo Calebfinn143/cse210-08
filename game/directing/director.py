@@ -1,3 +1,11 @@
+from ctypes.wintypes import POINT
+
+from game.casting.rocks import Rocks
+from game.casting.gems import Gems
+import random
+from game.shared.point import Point
+from game.shared.color import Color
+
 class Director:
     """A person who directs the game. 
     
@@ -17,7 +25,11 @@ class Director:
         """
         self._keyboard_service = keyboard_service
         self._video_service = video_service
-        self.score = 0
+        self._score = 0
+        self.DEFAULT_ARTIFACTS = random.randint(0, 6)
+        self.FONT_SIZE = 20
+        self.CELL_SIZE = 20
+        self.COLS = 60
         
     def start_game(self, cast):
         """Starts the game using the given cast. Runs the main game loop.
@@ -30,6 +42,7 @@ class Director:
             self._get_inputs(cast)
             self._do_updates(cast)
             self._do_outputs(cast)
+            self._create_artifacts(cast)
         self._video_service.close_window()
 
     def _get_inputs(self, cast):
@@ -53,7 +66,7 @@ class Director:
         gems = cast.get_actors("gems")
         rocks = cast.get_actors("rocks")
 
-        banner.set_text("Score: " + str(self.score))
+        banner.set_text("Score: " + str(self._score))
         max_x = self._video_service.get_width()
         max_y = self._video_service.get_height()
         robot.move_next(max_x, max_y)
@@ -62,13 +75,17 @@ class Director:
             gem.move_next(max_x, max_y)
             if robot.get_position().equals(gem.get_position()):
                 cast.remove_actor("gems", gem)
-                self.score += 1
+                self._score += 1
+            if gem.get_position().get_y() == 590:
+                cast.remove_actor("gems", gem)
 
         for rock in rocks:
             rock.move_next(max_x, max_y)
             if robot.get_position().equals(rock.get_position()):
                     cast.remove_actor("rocks", rock)
-                    self.score -= 1
+                    self._score -= 1
+            if rock.get_position().get_y() == 590:
+                cast.remove_actor("rocks", rock)
         
     def _do_outputs(self, cast):
         """Draws the actors on the screen.
@@ -80,3 +97,35 @@ class Director:
         actors = cast.get_all_actors()
         self._video_service.draw_actors(actors)
         self._video_service.flush_buffer()
+
+    def _create_artifacts(self, cast):
+        for n in range(self.DEFAULT_ARTIFACTS):
+            self.gems_and_rocks = ("*", "O")
+            text = random.choice(self.gems_and_rocks)
+
+            x = random.randint(1, self.COLS - 1)
+            y = 600
+            position = Point(x, y)
+            position = position.scale(self.CELL_SIZE)
+
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
+            color = Color(r, g, b)
+
+            if text == "O":
+                rocks = Rocks()
+                rocks.set_text(text)
+                rocks.set_font_size(self.FONT_SIZE)
+                rocks.set_color(color)
+                rocks.set_position(position)
+                rocks.set_velocity(Point(0, 5))
+                cast.add_actor("rocks", rocks)
+            else:
+                gems = Gems()
+                gems.set_text(text)
+                gems.set_font_size(self.FONT_SIZE)
+                gems.set_color(color)
+                gems.set_position(position)
+                gems.set_velocity(Point(0, 5))
+                cast.add_actor("gems", gems)

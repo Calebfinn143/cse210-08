@@ -26,7 +26,6 @@ CAPTION = "Greed"
 WHITE = Color(255, 255, 255)
 DEFAULT_ARTIFACTS = random.randint(0, 6)
 
-
 def main():
     
     # create the cast
